@@ -1,11 +1,15 @@
 import axios from 'axios';
 
-axios.defaults.baseURL = 'https://pixabay.com/api/';
+const API_KEY = '32819463-089d108b74804e81dbda92dfd';
+const BASE_URL = 'https://pixabay.com/api/';
 
-export const addMaterial = async values => {
-  const response = await axios.post(
-    '?q=cat&page=1&key=32819463-089d108b74804e81dbda92dfd&image_type=photo&orientation=horizontal&per_page=12',
-    values
-  );
-  return response.data;
-};
+export async function getImages(query, page) {
+  try {
+    const { data } = await axios.get(
+      `${BASE_URL}?q=${query}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
+    );
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
