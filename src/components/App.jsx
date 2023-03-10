@@ -1,7 +1,7 @@
 import { Component } from "react";
 import { Searchbar } from "./Searchbar/Searchbar";
 import * as api from './services/api'
-
+import { BallTriangle } from 'react-loader-spinner'
 export class App extends Component
 
 {
@@ -13,6 +13,7 @@ export class App extends Component
     isVisible: false,
     isLoad: false,
     empty: false,
+    loader:false,
   }
   componentDidUpdate(prevProps, prevState)
   {
@@ -23,9 +24,10 @@ export class App extends Component
   getImages = async (query, page) =>
   {
     if (!query) return;
-    this.setState({isLoad:true})
+    this.setState({isLoad:true, loader:true})
   
     try {
+      this.setState({loader:true})
       const { hits, total, totalHits } = await api.getImages(query, page)
       if (hits.length === 0) { this.setState({ empty: true })}
       console.log({hits,total,totalHits})
@@ -36,7 +38,7 @@ export class App extends Component
     } catch(error) {
       this.setState({ error: error })
     } finally {
-    this.setState({isLoad: false})}
+    this.setState({isLoad: false, loader:false})}
   }
   onSubmit = (e) =>
   {
@@ -57,9 +59,19 @@ export class App extends Component
   })
   render()
  
-  { const { hits , isVisible, isLoad, error, empty} = this.state;
+  { const { hits , isVisible, isLoad, error, empty, loader} = this.state;
     return (<div>
       <Searchbar onSubmit={this.handleSubmit} />
+            {loader && <BallTriangle
+        height={100}
+        width={100}
+        radius={5}
+        color="#664da9"
+        ariaLabel="ball-triangle-loading"
+        wrapperClass={{}}
+        wrapperStyle=""
+        visible={true}
+      />}
       <ul>{hits.map(({ id, webformatURL, tags }) =>
       (<li key={id}>
         <img src={webformatURL}alt={tags} />
