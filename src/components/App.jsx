@@ -1,7 +1,11 @@
 import { Component } from "react";
 import { Searchbar } from "./Searchbar/Searchbar";
 import * as api from './services/api'
-import { BallTriangle } from 'react-loader-spinner'
+import { ImageGallery } from "./ImageGallery/ImageGallery";
+import { Button } from "./Button/Button";
+import { GlobalStyle } from "./GlobalStyle.styled";
+import { Layout } from "./Layout.styled";
+import { Loader } from "./Loader";
 export class App extends Component
 
 {
@@ -60,26 +64,13 @@ export class App extends Component
   render()
  
   { const { hits , isVisible, isLoad, error, empty, loader} = this.state;
-    return (<div>
+    return (<Layout>
+      <GlobalStyle/>
       <Searchbar onSubmit={this.handleSubmit} />
-            {loader && <BallTriangle
-        height={100}
-        width={100}
-        radius={5}
-        color="#664da9"
-        ariaLabel="ball-triangle-loading"
-        wrapperClass={{}}
-        wrapperStyle=""
-        visible={true}
-      />}
-      <ul>{hits.map(({ id, webformatURL, tags }) =>
-      (<li key={id}>
-        <img src={webformatURL}alt={tags} />
-      </li>))}
-        
-      </ul>
-      {isVisible && <button onClick={this.showMoreImg}>{isLoad ? 'Loading...' : 'Load more'}</button>} 
+            {loader && <Loader/> }
+      <ImageGallery hits={hits} />
+      {isVisible && <Button onClick={this.showMoreImg} isLoad={isLoad } />} 
       {error && <p>Oops</p>}
       {empty && <p>Sorry. There are no images...</p>}
-  </div>)}
+  </Layout>)}
 }
